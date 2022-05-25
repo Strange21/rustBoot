@@ -18,5 +18,5 @@ rustBoot-update = {path = "../../../update", features = ["stm32f411"]}
 
 # board-specific features
 [dependencies.stm32f4xx-hal]
-version = "0.10.1"
+version = "0.13.1"
 features = ["rt", "stm32f411"]

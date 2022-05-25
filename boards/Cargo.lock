@@ -21,6 +21,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "autocfg"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
+
+[[package]]
 name = "az"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -85,7 +91,7 @@ dependencies = [
  "panic-probe 0.2.1",
  "rustBoot-hal",
  "rustBoot-update",
- "stm32f4xx-hal",
+ "stm32f4xx-hal 0.10.1",
 ]
 
 [[package]]
@@ -111,6 +117,16 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "chrono"
+version = "0.4.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "670ad68c9088c2a963aaa298cb369688cf3f9465ce5e2d4ca10e6e0098a1ce73"
+dependencies = [
+ "num-integer",
+ "num-traits",
+]
 
 [[package]]
 name = "const-oid"
@@ -287,6 +303,15 @@ dependencies = [
  "sec1",
  "subtle",
  "zeroize",
+]
+
+[[package]]
+name = "embedded-dma"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "46c8c02e4347a0267ca60813c952017f4c5948c232474c6010a381a337f1bda4"
+dependencies = [
+ "stable_deref_trait",
 ]
 
 [[package]]
@@ -483,7 +508,7 @@ dependencies = [
  "cast",
  "cfg-if",
  "cortex-m",
- "embedded-dma",
+ "embedded-dma 0.2.0",
  "embedded-hal 0.2.7",
  "embedded-storage 0.3.0",
  "fixed",
@@ -565,6 +590,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-integer"
+version = "0.1.45"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "225d3389fb3509a24c93f5c29eb6bde2586b98d9f016636dff58d7c6f7569cd9"
+dependencies = [
+ "autocfg",
+ "num-traits",
+]
+
+[[package]]
+name = "num-traits"
+version = "0.2.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "578ede34cf02f8924ab9447f50c28075b4d3e5b269972345e7e0372b38c6cdcd"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "num_threads"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -607,6 +651,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ab1f00eac22bd18f8e5cae9555f2820b3a0c166b5b556ee3e203746ea6dcf3a"
 dependencies = [
  "cortex-m",
+ "defmt",
 ]
 
 [[package]]
@@ -734,6 +779,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rtcc"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef35f9dcbf434a34dcc99b3ebba1c1945d49c70832958e932e83dc63a5273994"
+dependencies = [
+ "chrono",
+]
+
+[[package]]
 name = "rustBoot"
 version = "0.1.0"
 dependencies = [
@@ -755,7 +809,7 @@ dependencies = [
  "defmt",
  "nrf52840-hal",
  "rustBoot",
- "stm32f4xx-hal",
+ "stm32f4xx-hal 0.13.1",
  "tock-registers",
 ]
 
@@ -845,6 +899,17 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "stm32f4"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da3d56009c8f32e4f208dbea17df72484154d1040a8969b75d8c73eb7b18fe8f"
+dependencies = [
+ "bare-metal 0.2.5",
+ "cortex-m",
+ "vcell",
+]
+
+[[package]]
+name = "stm32f4"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "379f030a0586d0aa3574cb6497392142ddf125c8146b7b580b4b6b46db9d7dc9"
@@ -859,10 +924,10 @@ dependencies = [
 name = "stm32f411"
 version = "0.1.0"
 dependencies = [
- "cortex-m",
  "cortex-m-rt",
  "defmt",
  "defmt-rtt",
+ "panic-probe 0.3.0",
  "rustBoot-hal",
  "rustBoot-update",
 ]
@@ -890,7 +955,7 @@ dependencies = [
  "panic-probe 0.3.0",
  "rustBoot-hal",
  "rustBoot-update",
- "stm32f4xx-hal",
+ "stm32f4xx-hal 0.13.1",
 ]
 
 [[package]]
@@ -902,7 +967,26 @@ dependencies = [
  "panic-probe 0.3.0",
  "rustBoot-hal",
  "rustBoot-update",
- "stm32f4xx-hal",
+ "stm32f4xx-hal 0.13.1",
+]
+
+[[package]]
+name = "stm32f4xx-hal"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a06fde2dd27c0ba934c9e69b62af66eb1c20dbb6d741b187a763912e9892d13"
+dependencies = [
+ "bare-metal 1.0.0",
+ "cast",
+ "cortex-m",
+ "cortex-m-rt",
+ "embedded-dma 0.1.2",
+ "embedded-hal 0.2.7",
+ "nb 1.0.0",
+ "rand_core",
+ "rtcc",
+ "stm32f4 0.13.0",
+ "void",
 ]
 
 [[package]]
@@ -915,7 +999,7 @@ dependencies = [
  "bitflags",
  "cortex-m",
  "cortex-m-rt",
- "embedded-dma",
+ "embedded-dma 0.2.0",
  "embedded-hal 0.2.7",
  "embedded-hal 1.0.0-alpha.7",
  "embedded-storage 0.2.0",
@@ -923,7 +1007,7 @@ dependencies = [
  "fugit-timer",
  "nb 1.0.0",
  "rand_core",
- "stm32f4",
+ "stm32f4 0.14.0",
  "time",
  "void",
 ]
@@ -982,7 +1066,7 @@ dependencies = [
  "panic-probe 0.2.1",
  "rustBoot-hal",
  "rustBoot-update",
- "stm32f4xx-hal",
+ "stm32f4xx-hal 0.13.1",
 ]
 
 [[package]]
