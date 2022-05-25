@@ -11,10 +11,10 @@ use cortex_m_rt::entry;
 use crate::mcu::{
     pac,
     prelude::*,
-}
+};
 use panic_probe as _;
 
-use rustBoot_hal::stm::stm32f411::FlashWriterEraser;
+use rustBoot_hal::stm::stm32f446::FlashWriterEraser;
 use rustBoot_update::update::{update_flash::FlashUpdater, UpdateInterface};
 
 
@@ -26,7 +26,8 @@ fn main() -> ! {
 
     let rcc = dp.RCC.constrain();
     let clocks = rcc.cfgr.sysclk(48.MHz()).freeze();    
-
+    let mut count :i32 = 0;
+    
     let mut delay = dp.TIM1.delay_ms(&clocks);
 
     while count < 6 {
@@ -45,9 +46,7 @@ fn main() -> ! {
     }
 
     loop {
-        leds.red.toggle();
+        led.toggle();
         delay.delay_ms(1000_u16);
     }
-}
-    loop {}
 }
