@@ -1,0 +1,7 @@
+cargo:rustc-link-lib=static=cortex-m-rt
+cargo:rerun-if-changed=bin/thumbv7em-none-eabihf.a
+cargo:rustc-cfg=cortex_m
+cargo:rustc-cfg=armv7m
+cargo:rustc-link-search=/home/anand/Desktop/dev_space/production/My_rustBoot/rustBoot/boards/target/thumbv7em-none-eabihf/release/build/cortex-m-rt-97d5d32d1e5492f5/out
+cargo:rerun-if-changed=build.rs
+cargo:rerun-if-changed=link.x.in
