@@ -1,2 +1,0 @@
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/anand/Desktop/dev_space/production/My_rustBoot/rustBoot/boards/target/thumbv7em-none-eabihf/release/build/typenum-2357fe70d9240c8f/out/consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=/home/anand/Desktop/dev_space/production/My_rustBoot/rustBoot/boards/target/thumbv7em-none-eabihf/release/build/typenum-2357fe70d9240c8f/out/op.rs

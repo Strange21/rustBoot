@@ -11,6 +11,7 @@ use cortex_m_rt::entry;
 #[entry]
 fn main() -> ! {
     let updater = FlashUpdater::new(FlashWriterEraser::new());
+    defmt::println!("booting from rustboot");
     updater.rustboot_start()
 }
 

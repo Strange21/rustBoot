@@ -1,3 +1,0 @@
-cargo:rustc-link-search=/home/anand/Desktop/dev_space/production/My_rustBoot/rustBoot/boards/target/thumbv7em-none-eabihf/release/build/stm32f446-b644a01a1a38c3ad/out
-cargo:rerun-if-changed=build.rs
-cargo:rerun-if-changed=memory.x

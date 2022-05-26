@@ -10,6 +10,7 @@ use rustBoot::{Result, RustbootError};
 use super::UpdateInterface;
 use rustBoot::flashapi::FlashApi;
 use rustBoot_hal::FlashInterface;
+use defmt::Format;
 
 struct RefinedUsize<const MIN: usize, const MAX: usize, const VAL: usize>(usize);
 
@@ -274,9 +275,10 @@ where
     fn rustboot_start(self) -> ! {
         let mut boot = PartDescriptor::open_partition(Boot, self).unwrap();
         let updt = PartDescriptor::open_partition(Update, self).unwrap();
-
+        
         // Check the BOOT partition for state - if it is still in TESTING, trigger rollback.
         if let ImageType::BootInTestingState(_v) = boot {
+            defmt::println!("In bootintesting stage");
             self.update_trigger();
             match self.rustboot_update(true) {
                 Ok(_v) => {}
@@ -286,6 +288,7 @@ where
             }
         // Check the UPDATE partition for state - if it is marked as UPDATING, trigger update.
         } else if let ImageType::UpdateInUpdatingState(_v) = updt {
+            defmt::println!("In UpdateInUpdatingState stage");
             match self.rustboot_update(false) {
                 Ok(_v) => {}
                 Err(_e) => {
@@ -295,9 +298,11 @@ where
         } else {
             match boot {
                 ImageType::BootInNewState(ref mut img) => {
+                    defmt::println!("In function boot BootInNewState..");
                     if (img.verify_integrity::<SHA256_DIGEST_SIZE>().is_err()
                         || img.verify_authenticity::<HDR_IMG_TYPE_AUTH>().is_err())
                     {
+                        defmt::println!("In function boot BootInNewState --2");
                         match self.rustboot_update(true) {
                             Err(_v) => {
                                 #[cfg(feature = "defmt")]
@@ -320,6 +325,7 @@ where
                     if (img.verify_integrity::<SHA256_DIGEST_SIZE>().is_err()
                         || img.verify_authenticity::<HDR_IMG_TYPE_AUTH>().is_err())
                     {
+                        defmt::println!("In function boot BootInSuccessState");
                         match self.rustboot_update(true) {
                             Err(_v) => {
                                 #[cfg(feature = "defmt")]
@@ -349,15 +355,18 @@ where
         let boot = PartDescriptor::open_partition(Boot, self).unwrap();
         match boot {
             ImageType::BootInNewState(img) => {
+                defmt::println!("In function boot BootInNewState --3");
                 let boot_part = img.part_desc.get().unwrap();
                 let base_img_addr = RefinedUsize::<0, 0, BOOT_FWBASE>::single_valued_int(
                     boot_part.fw_base as usize,
                 )
                 .0;
                 hal_preboot();
+                defmt::println!("fw_base_addr --> {}", base_img_addr);
                 hal_boot_from(base_img_addr)
             }
             ImageType::BootInSuccessState(img) => {
+                defmt::println!("In function boot BootInNewState --4");
                 let boot_part = img.part_desc.get().unwrap();
                 let base_img_addr = RefinedUsize::<0, 0, BOOT_FWBASE>::single_valued_int(
                     boot_part.fw_base as usize,
@@ -368,6 +377,7 @@ where
             }
             // If an update is successful, this is the state of the boot partition.
             ImageType::BootInTestingState(img) => {
+                defmt::println!("In function boot BootInNewState --5");
                 let boot_part = img.part_desc.get().unwrap();
                 let base_img_addr = RefinedUsize::<0, 0, BOOT_FWBASE>::single_valued_int(
                     boot_part.fw_base as usize,
@@ -383,6 +393,7 @@ where
     fn update_trigger(self) -> Result<()> {
         let updt = PartDescriptor::open_partition(Update, self).unwrap();
         Self::flash_unlock();
+        defmt::println!("In update trigger\n");
         match updt {
             ImageType::UpdateInNewState(img) => {
                 let new_img = img.into_updating_state();

@@ -12,7 +12,7 @@ mod stm32f446re_constants {
     pub const RB_HDR_SIZE     : u32 = 0x100;
     pub const BASE_ADDR       : u32 = 0x08020000;   //  sector 5 starting address
     pub const VTR_TABLE_SIZE  : u32 = 0x100;
-    pub const FW_RESET_VTR    : u32 = BASE_ADDR + RB_HDR_SIZE + VTR_TABLE_SIZE + 0x99;
+    pub const FW_RESET_VTR    : u32 = BASE_ADDR + RB_HDR_SIZE + VTR_TABLE_SIZE + 0xA9;
     pub const UNLOCKKEY1      : u32 = 0x45670123;
     pub const UNLOCKKEY2      : u32 = 0xCDEF89AB;
     pub const PSIZE_X8        : u8  = 0b00;
@@ -153,4 +153,54 @@ impl FlashInterface for FlashWriterEraser{
         //Lock the FLASH
         self.hal_flash_lock();
     }
+}
+
+struct RefinedUsize<const MIN: u32, const MAX: u32, const VAL: u32>(u32);
+
+impl<const MIN: u32, const MAX: u32, const VAL: u32> RefinedUsize<MIN, MAX, VAL> {
+    /// This method is used to check the address bound of stack pointer
+    ///
+    /// Method arguments:
+    /// -   i : starting address of stack  
+    /// Returns:
+    /// -  It returns u32 address of stack pointer
+    pub fn bounded_int(i: u32) -> Self {
+        assert!(i >= MIN && i <= MAX);
+        RefinedUsize(i)
+    }
+    /// This method is used to check the address of reset pointer
+    ///
+    /// Method arguments:
+    /// -   i : starting address of reset  
+    /// Returns:
+    /// -  It returns u32 address of reset pointer
+    pub fn single_valued_int(i: u32) -> Self {
+        assert!(i == VAL);
+        RefinedUsize(i)
+    }
+}
+
+    /// This method is used to boot the firmware from a particular address
+    ///
+    /// Method arguments:
+    /// -   fw_base_address  : address of the firmware
+    /// Returns:
+    /// -  NONE
+
+#[rustfmt::skip]
+pub fn boot_from(fw_base_address: usize) -> ! {
+       let address = fw_base_address as u32;
+       let scb = hal::pac::SCB::ptr();
+       unsafe {
+       let sp = RefinedUsize::<STACK_LOW, STACK_UP, 0>::bounded_int(
+        *(fw_base_address as *const u32)).0;
+       let rv = RefinedUsize::<0, 0, FW_RESET_VTR>::single_valued_int(
+        *((fw_base_address + 4) as *const u32)).0;
+       let jump_vector = core::mem::transmute::<usize, extern "C" fn() -> !>(rv as usize);
+       (*scb).vtor.write(address);
+       cortex_m::register::msp::write(sp);
+       jump_vector();
+    
+       }
+       loop{}
 }

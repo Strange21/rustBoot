@@ -818,6 +818,7 @@ name = "rustBoot-update"
 version = "0.1.0"
 dependencies = [
  "defmt",
+ "defmt-rtt",
  "rustBoot",
  "rustBoot-hal",
 ]
